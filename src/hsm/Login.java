@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-
 public class Login extends JFrame implements ActionListener {
 
     JTextField textField;
@@ -102,6 +101,13 @@ public class Login extends JFrame implements ActionListener {
             }
         });
         add(exitButton);
+
+        ImageIcon img = new ImageIcon(getClass().getResource("/hsm/page1.jpg"));
+        Image i1 = img.getImage().getScaledInstance(800, 500, Image.SCALE_DEFAULT);
+        ImageIcon img1 = new ImageIcon(i1);
+        JLabel label = new JLabel(img1);
+        label.setBounds(0, 0, 800, 500);
+        add(label);
 
         setVisible(true);
     }
