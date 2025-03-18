@@ -87,5 +87,6 @@ public class PatientDataHandler {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error updating patient record!", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
     }
 }
