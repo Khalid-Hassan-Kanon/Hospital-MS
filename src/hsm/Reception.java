@@ -50,14 +50,45 @@ public class Reception extends JFrame {
         add(buttonPanel, BorderLayout.CENTER);
 
         // Action Listeners
-          patientManagement.addActionListener((ActionEvent e) -> new PatientManagementWindow());
-//        allEmployees.addActionListener((ActionEvent e) -> new EmployeeInfoWindow());
-//        room.addActionListener((ActionEvent e) -> new RoomWindow());
-//        ambulance.addActionListener((ActionEvent e) -> new AmbulanceWindow());
-//        department.addActionListener((ActionEvent e) -> new DepartmentWindow());
-//        searchRoom.addActionListener((ActionEvent e) -> new SearchRoomWindow());
-//        addAdmin.addActionListener((ActionEvent e) -> new AddAdminWindow());
-//        bloodBank.addActionListener((ActionEvent e) -> new BloodBankWindow());
+        patientManagement.addActionListener((ActionEvent e) -> {
+            setVisible(false);
+            new PatientManagementWindow();
+
+        });
+        allEmployees.addActionListener((ActionEvent e) -> {
+            setVisible(false);
+            // new EmployeeInfoWindow();
+        });
+
+        room.addActionListener((ActionEvent e) -> {
+            setVisible(false);
+            // new RoomWindow();
+        });
+
+        ambulance.addActionListener((ActionEvent e) -> {
+            setVisible(false);
+            // new AmbulanceWindow();
+        });
+
+        department.addActionListener((ActionEvent e) -> {
+            setVisible(false);
+            // new DepartmentWindow();
+        });
+
+        searchRoom.addActionListener((ActionEvent e) -> {
+            setVisible(false);
+            //new SearchRoomWindow();
+        });
+
+        addAdmin.addActionListener((ActionEvent e) -> {
+            setVisible(false);
+            //new AddAdminWindow();
+        });
+
+        bloodBank.addActionListener((ActionEvent e) -> {
+            setVisible(false); // Hide Reception
+            new BloodBankWindow(); // Pass reference to Reception
+        });
 
         logout.addActionListener((ActionEvent e) -> {
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION);
@@ -83,6 +114,7 @@ public class Reception extends JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(bgColor.brighter());
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(bgColor);
             }

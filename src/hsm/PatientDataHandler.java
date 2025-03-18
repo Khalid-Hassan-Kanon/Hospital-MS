@@ -35,6 +35,25 @@ public class PatientDataHandler {
         }
         return patients;
     }
+    
+ public static List<String[]> findPatientInfo(String patientId) {
+        List<String[]> patients = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] patientData = line.split(",");
+                if (patientData.length > 0 && patientData[0].trim().equals(patientId.trim())) {
+                    patients.add(patientData);
+                }
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error reading patient records!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return patients; // Return an empty list instead of null
+    }
+
 
     // ✅ Method to discharge a patient (Remove by ID)
     public static boolean removePatient(String id) {

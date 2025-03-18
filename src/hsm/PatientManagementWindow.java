@@ -28,7 +28,25 @@ public class PatientManagementWindow extends JFrame {
         tabbedPane.addTab("Add Patient", new AddPatientPanel());
         tabbedPane.addTab("Update Patient", new UpdatePatientPanel());
         tabbedPane.addTab("Patient Info", new PatientInfoPanel());
+        tabbedPane.addTab("Search Info", new SearchPatient());
         tabbedPane.addTab("Patient Discharge", new DischargePatientPanel());
+        
+        
+        
+        
+        JButton backButton  = new JButton("Back");
+        backButton.setFont(new Font("Arial", Font.BOLD, 16));
+        backButton.setBackground(new Color(30, 144, 255));  // Dodger Blue color
+        backButton.setForeground(Color.WHITE);
+        add(backButton, BorderLayout.NORTH);
+
+        // Add action listener to the back button
+        backButton.addActionListener(e -> {
+            // Close the current window
+            dispose();
+            // Open the Reception window
+            new Reception();
+        });
         
 
         // Add tab panel to window
@@ -36,6 +54,10 @@ public class PatientManagementWindow extends JFrame {
 
         setVisible(true);
     }
+
+    
+    
+    
 
     // ✅ Panel for "Add Patient"
     class AddPatientPanel extends JPanel {
@@ -246,40 +268,50 @@ public class PatientManagementWindow extends JFrame {
         }
     }
 
-    // ✅ Panel for "Patient Info"
-    class PatientInfoPanel extends JPanel {
-        private JTable table;
-        private DefaultTableModel tableModel;
-        private JButton refreshButton;
+class PatientInfoPanel extends JPanel {
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private JButton refreshButton;
 
-        public PatientInfoPanel() {
-            setLayout(new BorderLayout());
-            setBackground(new Color(255, 255, 255));
+    public PatientInfoPanel() {
+        setLayout(new BorderLayout());
+        setBackground(new Color(255, 255, 255));
 
-            String[] columns = {"ID", "Name", "Age", "Gender", "Address", "Phone", "Disease", "Symptoms", "Date/Time", "Deposit", "Doctor"};
-            tableModel = new DefaultTableModel(columns, 0);
-            table = new JTable(tableModel);
-            JScrollPane scrollPane = new JScrollPane(table);
-            add(scrollPane, BorderLayout.CENTER);
+        // Column headers
+        String[] columns = {"ID", "Name", "Age", "Gender", "Address", "Phone", "Disease", "Symptoms", "Date/Time", "Deposit", "Doctor"};
+        tableModel = new DefaultTableModel(columns, 0);
+        table = new JTable(tableModel);
 
-            refreshButton = new JButton("Refresh");
-            refreshButton.setFont(new Font("Arial", Font.BOLD, 14));
-            refreshButton.setBackground(new Color(30, 144, 255)); // Button background color
-            refreshButton.setForeground(Color.WHITE); // Button text color
-            add(refreshButton, BorderLayout.SOUTH);
+        // Set table properties for better visibility
+        table.setRowHeight(35); // Increase row height for better spacing
+        table.setFont(new Font("Arial", Font.PLAIN, 13)); // Bigger font for table content
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18)); // Bigger font for headers
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // Ensure columns fit
 
-            refreshButton.addActionListener(e -> loadPatientData());
-            loadPatientData();
-        }
+        // Scroll pane to make table bigger
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(1000, 500)); // Increase size of table area
 
-        private void loadPatientData() {
-            List<String[]> patients = PatientDataHandler.getAllPatients();
-            tableModel.setRowCount(0);
-            for (String[] patient : patients) {
-                tableModel.addRow(patient);
-            }
+        add(scrollPane, BorderLayout.CENTER);
+
+        refreshButton = new JButton("Refresh");
+        refreshButton.setFont(new Font("Arial", Font.BOLD, 16));
+        refreshButton.setBackground(new Color(30, 144, 255)); // Button background color
+        refreshButton.setForeground(Color.WHITE); // Button text color
+        add(refreshButton, BorderLayout.SOUTH);
+
+        refreshButton.addActionListener(e -> loadPatientData());
+        loadPatientData();
+    }
+
+    private void loadPatientData() {
+        List<String[]> patients = PatientDataHandler.getAllPatients();
+        tableModel.setRowCount(0);
+        for (String[] patient : patients) {
+            tableModel.addRow(patient);
         }
     }
+}
 
     // ✅ Panel for "Discharge Patient"
     class DischargePatientPanel extends JPanel {
@@ -329,14 +361,84 @@ public class PatientManagementWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Patient ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    
+
     }
+class SearchPatient extends JPanel {
+    private JTextField searchField;
+    private JButton searchButton;
+    private JTable resultTable;
+    private DefaultTableModel tableModel;
+
+    public SearchPatient() {
+        setLayout(new BorderLayout());
+
+        // Search panel
+        JPanel searchPanel = new JPanel();
+        searchField = new JTextField(20);
+        searchButton = new JButton("Search");
+
+        searchPanel.add(new JLabel("Enter Patient ID:"));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        // Table setup
+        String[] columns = {"ID", "Name", "Age", "Gender", "Address", "Phone", "Disease", "Symptoms", "Date/Time", "Deposit", "Doctor"};
+        tableModel = new DefaultTableModel(columns, 0);
+        resultTable = new JTable(tableModel);
+
+        // Improve table visuals
+        resultTable.setRowHeight(30);
+        resultTable.setFont(new Font("Arial", Font.PLAIN, 14));
+        resultTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+        resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JScrollPane scrollPane = new JScrollPane(resultTable);
+        scrollPane.setPreferredSize(new Dimension(800, 200)); // Increase table size
+
+        // Add components
+        add(searchPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Search button functionality
+        searchButton.addActionListener(e -> searchPatient());
+    }
+
+   private void searchPatient() {
+    String patientId = searchField.getText().trim();
+    if (patientId.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter a Patient ID!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    List<String[]> patientInfoList = PatientDataHandler.findPatientInfo(patientId);
+    tableModel.setRowCount(0); // Clear previous results
+
+    if (!patientInfoList.isEmpty()) {
+        // Assuming only one patient is returned (modify for multiple results if needed)
+        String[] patientInfo = patientInfoList.get(0);
+
+        // Define field names
+        String[] fieldNames = {"ID", "Name", "Age", "Gender", "Address", "Phone", "Disease", "Symptoms", "Date/Time", "Deposit", "Doctor"};
+
+        // Set table headers for vertical layout
+        tableModel.setColumnIdentifiers(new String[]{"Field", "Value"});
+
+        // Add data as vertical rows
+        for (int i = 0; i < fieldNames.length; i++) {
+            tableModel.addRow(new String[]{fieldNames[i], patientInfo[i]});
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "No patient found with ID: " + patientId, "Not Found", JOptionPane.WARNING_MESSAGE);
+    }
+}
+
+}
     
        public static void main(String[] args) {
         new PatientManagementWindow();
     }
 }
-
-
 
 
  
