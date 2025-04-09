@@ -1,34 +1,73 @@
 package hsm;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Data {
+    private static final String FILE_PATH = "D:\\Multithreading\\HSM\\src\\hsm\\User.txt";
 
-    // Method to check if username and password match the ones in the User.txt file
     public static boolean validateCredentials(String username, String password) {
-        String line;
-        try {
-            // Absolute path to User.txt file
-            String filePath = "D:\\Multithreading\\HSM\\src\\hsm\\User.txt"; // Change this to your actual path
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
             while ((line = reader.readLine()) != null) {
-                // Assuming the format is "username password" in the file
                 String[] credentials = line.trim().split("\\s+");
-                if (credentials.length == 2) {
-                    String storedUsername = credentials[0];
-                    String storedPassword = credentials[1];
-                    
-                    if (storedUsername.equals(username) && storedPassword.equals(password)) {
-                        return true; // Found a match
-                    }
+                if (credentials.length == 2 &&
+                        credentials[0].equals(username) &&
+                        credentials[1].equals(password)) {
+                    return true;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false; // No match found
+        return false;
+    }
+
+    public static boolean addUser(String username, String password) {
+        if (username.isEmpty() || password.isEmpty()) return false;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+            writer.write(username + " " + password);
+            writer.newLine();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean removeUser(String username, String password) {
+        File file = new File(FILE_PATH);
+        List<String> updatedLines = new ArrayList<>();
+        boolean found = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().equals(username + " " + password)) {
+                    updatedLines.add(line);
+                } else {
+                    found = true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (!found) return false;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (String line : updatedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

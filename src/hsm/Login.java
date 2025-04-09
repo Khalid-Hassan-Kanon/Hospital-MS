@@ -1,8 +1,8 @@
 package hsm;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 
 public class Login extends JFrame implements ActionListener {
 
@@ -15,7 +15,7 @@ public class Login extends JFrame implements ActionListener {
         setSize(800, 500);
         setLocationRelativeTo(null);
         setLayout(null);
-        getContentPane().setBackground(new Color(210, 245, 225));
+        getContentPane().setBackground(new Color(210, 245, 225)); // Light green background
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -23,7 +23,7 @@ public class Login extends JFrame implements ActionListener {
         JLabel titleLabel = new JLabel("Hospital Management System");
         titleLabel.setBounds(200, 30, 400, 40);
         titleLabel.setFont(new Font("Tahoma", Font.BOLD, 22));
-        titleLabel.setForeground(new Color(0, 80, 160));
+        titleLabel.setForeground(new Color(0, 80, 160)); // Blue color for the title
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel);
 
@@ -42,7 +42,7 @@ public class Login extends JFrame implements ActionListener {
         textField.setBounds(centerX + 120, 150, 200, 30);
         textField.setFont(new Font("Tahoma", Font.PLAIN, 15));
         textField.setForeground(Color.GRAY);
-        textField.setBackground(new Color(230, 230, 230));
+        textField.setBackground(new Color(230, 230, 230)); // Light gray background for input fields
         addPlaceholderEffect(textField, "Enter Username");
         add(textField);
 
@@ -65,7 +65,7 @@ public class Login extends JFrame implements ActionListener {
         // Login Button
         jsignupButton = new JButton("Login");
         jsignupButton.setBounds(centerX + 40, 260, 120, 40);
-        jsignupButton.setBackground(new Color(0, 122, 204));
+        jsignupButton.setBackground(new Color(0, 122, 204)); // Blue color
         jsignupButton.setFont(new Font("Tahoma", Font.BOLD, 15));
         jsignupButton.setForeground(Color.WHITE);
         jsignupButton.setFocusPainted(false);
@@ -76,7 +76,7 @@ public class Login extends JFrame implements ActionListener {
         // Clear Button
         jclearButton = new JButton("Clear");
         jclearButton.setBounds(centerX + 180, 260, 120, 40);
-        jclearButton.setBackground(new Color(204, 0, 0));
+        jclearButton.setBackground(new Color(204, 0, 0)); // Red color
         jclearButton.setFont(new Font("Tahoma", Font.BOLD, 15));
         jclearButton.setForeground(Color.WHITE);
         jclearButton.setFocusPainted(false);
@@ -102,6 +102,7 @@ public class Login extends JFrame implements ActionListener {
         });
         add(exitButton);
 
+        // Set Background Image
         ImageIcon img = new ImageIcon(getClass().getResource("/hsm/page1.jpg"));
         Image i1 = img.getImage().getScaledInstance(800, 500, Image.SCALE_DEFAULT);
         ImageIcon img1 = new ImageIcon(i1);
@@ -169,9 +170,8 @@ public class Login extends JFrame implements ActionListener {
 
                 // Validate login using Data class
                 if (Data.validateCredentials(username, password)) {
-                    //JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     new Reception();
-                    setVisible(false);
+                    setVisible(false); // Hide login window
                 } else {
                     JOptionPane.showMessageDialog(this, "Invalid credentials, please try again.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
